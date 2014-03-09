@@ -52,12 +52,13 @@ class Point:
 
 
 
-
 def mouseclick(pos):
     global pos1, pos2, pos_lock, indx, draw_relations, draw_mark_relations, nodes, indx_mark_color
     global letter_label_default, letter_pos
+    
     #create new instance of point(node) if the last pos of mouseclick is not on  top of a previous node
     allow_place_node = True
+    
     if placeNodes == True:
         if nodes: #checks if nodes is not empty
             for p, location in enumerate(nodes):
@@ -76,6 +77,7 @@ def mouseclick(pos):
             nodes.append(Point(pos,NODE_COLOR,NODE_MARK_COLOR))
             nodes[-1].label = chr(ord(letter_label_default) + letter_pos)
             letter_pos += 1
+    
     #setting up the edges starts here
     if setNodesRelation == True:
         #print nodes
@@ -111,7 +113,6 @@ def mouseclick(pos):
                     else:
                         print "Warning: Recursion or self loop is not allowed."
 
-    return None
 
 def button_refresh_new_relation():
     global pos_lock, pos1, pos2, nodes, draw_relations, draw_mark_relations
@@ -130,6 +131,7 @@ def button_refresh_new_relation():
             del nodes[i].children[:]
     else:
         print "Warning: This action is not allowed."
+
 
 def button_lock_nodes():
     global placeNodes, setNodesRelation, current_node_letters_up, nodes, current_node_letters_low
@@ -172,6 +174,7 @@ def button_lock_graph():
     else:
         print "Warning: This action is not allowed."
 
+
 def input_start_handler(start_string):
     global start, nodes, setStart
     
@@ -201,6 +204,7 @@ def input_start_handler(start_string):
                 print "Start:", chr(start+65)
             else:
                 print "Warning: Unknown input. Enter a number or the node letter."
+
 
 def input_goal_handler(goal_string):
     global goal, nodes, setGoal
@@ -388,8 +392,8 @@ def button_depth_first_search():
                 break
             else:
                 result.append(pointer)
-
                 del temp_list[:]
+                
                 for neighbor in pointer.children:
                     in_queue_result = False
 
@@ -427,6 +431,7 @@ def button_depth_first_search():
 def draw_handler(canvas):
     global result_string, queue_string, pointer_string
     global placeNodes, setNodesRelation, setStart, setGoal, pos1
+    
     #Nodes drawing
     if draw_mark_relations == True and setNodesRelation == True:
         canvas.draw_circle(nodes[indx_mark_color].pos, 15, 3, "Yellow", "Black")
@@ -436,7 +441,6 @@ def draw_handler(canvas):
             nodes[i].draw(canvas)
             canvas.draw_text(nodes[i].label, (nodes[i].pos[0]-30, nodes[i].pos[1]), 20, NODE_LABEL_COLOR)
 
-
     #Edges drawing
     if draw_relations == True:
         for n, point in enumerate(nodes):
@@ -444,12 +448,13 @@ def draw_handler(canvas):
                 for child in nodes[n].children:
                     canvas.draw_line(nodes[n].pos, nodes[child].pos, EDGE_SIZE, EDGE_COLOR)
 
-
     #display results
     if displayResult == True:
         canvas.draw_text(pointer_string, (30, 345), 20, NODE_LABEL_COLOR)
         canvas.draw_text(result_string, (30, 365), 20, NODE_LABEL_COLOR)
         canvas.draw_text(queue_string, (30, 385), 20, NODE_LABEL_COLOR)
+
+
 
 frame = simplegui.create_frame("Breadth First Search",WIDTH,HEIGHT)
 
