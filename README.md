@@ -11,7 +11,8 @@ A Python GUI application to find a node in a linked graph using breadth and dept
 - Python 2.7
 - simpleguitk - [https://pypi.python.org/pypi/SimpleGUITk/1.1.3](https://pypi.python.org/pypi/SimpleGUITk/1.1.3 "Link")
 
-
+###Contribution###
+Feel free to fork the project and apply changes on your own repo but please don't send me any pull request.
 
 ### License and Copyright ###
 This package is Copyright (c) Ryan Gilera 2014 and is licensed under the MIT license. See license for more details.
