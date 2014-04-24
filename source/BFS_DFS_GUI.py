@@ -1,6 +1,13 @@
+"""
+    Title: A graph node search program in Python with the application of
+            bread first and depth first search algorithms.
+    Author: Ryan Gilera
+"""
+
+
 import simpleguitk as simplegui
 
-#Constants
+# Constants
 HEIGHT = 400
 WIDTH = 500
 NODE_SPACE_ALLOWANCE = 20
@@ -10,7 +17,7 @@ NODE_LABEL_COLOR = "White"
 NODE_COLOR = "Red"
 NODE_MARK_COLOR = "Green"
 
-#Global variables
+# Global variables
 start = 0
 goal = 0
 placeNodes = True
@@ -22,7 +29,7 @@ setStart = False
 displayResult = False
 lock_nodes = False
 nodes = []
-#variables for mouseclick function
+
 pos1 = [0,0]
 pos2 = [0,0]
 pos_lock = False
@@ -56,59 +63,59 @@ def mouseclick(pos):
     global pos1, pos2, pos_lock, indx, draw_relations, draw_mark_relations, nodes, indx_mark_color
     global letter_label_default, letter_pos
     
-    #create new instance of point(node) if the last pos of mouseclick is not on  top of a previous node
+    # Creates new instance of point(node) if the last position of
+    # the mouseclick is not on  top of a previous node
     allow_place_node = True
     
     if placeNodes == True:
-        if nodes: #checks if nodes is not empty
+        if nodes: # Checks if the nodes are not empty
             for p, location in enumerate(nodes):
                 if ((pos[0] >= (nodes[p].pos[0]-NODE_SPACE_ALLOWANCE) and pos[0] <= (nodes[p].pos[0]+NODE_SPACE_ALLOWANCE)) and
                     (pos[1] >= (nodes[p].pos[1]-NODE_SPACE_ALLOWANCE) and pos[1] <= (nodes[p].pos[1]+NODE_SPACE_ALLOWANCE))):
                     print "Warning: Cannot create node on top of another node!"
                     allow_place_node = False
                     break
-            #Create new instance of Point class if no nodes detected in the vicinity of mouseclick position
+            # Creates new instance of Point class if no nodes detected in 
+            # the vicinity of mouseclick position
             if allow_place_node == True:
                 nodes.append(Point(pos,NODE_COLOR,NODE_MARK_COLOR))
                 nodes[-1].label = chr(ord(letter_label_default) + letter_pos)
                 letter_pos += 1
-        #else is for first time creating a node
+        # Else creates a node for first time 
         else:  
             nodes.append(Point(pos,NODE_COLOR,NODE_MARK_COLOR))
             nodes[-1].label = chr(ord(letter_label_default) + letter_pos)
             letter_pos += 1
     
-    #setting up the edges starts here
+    # Sets up the edges or links
     if setNodesRelation == True:
-        #print nodes
-        #if mouseclick pos is on top of a current node mark that node
+        
+        # If mouseclick pos is on top of a current node mark that node
         for i, position in enumerate(nodes):
             if ((pos[0] >= (nodes[i].pos[0]-NODE_SPACE_ALLOWANCE) and pos[0] <= (nodes[i].pos[0]+NODE_SPACE_ALLOWANCE)) and
                 (pos[1] >= (nodes[i].pos[1]-NODE_SPACE_ALLOWANCE) and pos[1] <= (nodes[i].pos[1]+NODE_SPACE_ALLOWANCE))):
                 if pos_lock == False:
                     pos1[0] = pos[0]
                     pos1[1] = pos[1]
+                    
                     indx = i
                     indx_mark_color = i
                     pos_lock = True
                     draw_mark_relations = True
-                    #print "pos1:", pos1
                     break
 
                 else:
-                    #if it is the second node that is not the same of the first marked node 
-                    #then create new relation/edge
+                    # If it is the second node that is not the same of 
+                    # the first marked node, then creates a new relation/edge
                     if i != indx:
                         pos2[0] = pos[0]
                         pos2[1] = pos[1]
                         nodes[indx].children.append(i)
                         nodes[i].children.append(indx)
+                        
                         pos_lock = False
                         draw_relations = True
                         draw_mark_relations = False
-                        #print "pos2:", pos2
-                        #print nodes[indx].children
-                        #print nodes[i].children
                         break
                     else:
                         print "Warning: Recursion or self loop is not allowed."
@@ -126,7 +133,7 @@ def button_refresh_new_relation():
         pos2[0] = 0
         pos2[1] = 0
 
-        #this empties the list of children attribute of Point class
+        # This empties the list of children attribute of Point class
         for i, child in enumerate(nodes):
             del nodes[i].children[:]
     else:
@@ -136,13 +143,14 @@ def button_refresh_new_relation():
 def button_lock_nodes():
     global placeNodes, setNodesRelation, current_node_letters_up, nodes, current_node_letters_low
     
-    #can only lock nodes if the set-up is right
-    #prevents locking nodes later in the program
+    # Can only lock nodes if the set-up is right
+    # Prevents locking nodes later in the program
     if placeNodes == True and setNodesRelation == False and setStart == False and setGoal == False:
         placeNodes = False
         setNodesRelation = True
         
-        #fills two new lists of all nodes labels(letters) for later use in input start and goal
+        # Fills two new lists of all node labels(letters) 
+        # for later use in input start and goal
         if nodes:
             for n, obj in enumerate(nodes):
                 current_node_letters_up.append(nodes[n].label)
@@ -162,12 +170,14 @@ def button_lock_graph():
         setNodesRelation = False
         lock_nodes = True
 
-        #sets the index of nodes list and apply it to each index attribute of Point class
-        #for index/element reference only, for later use in BFS and DFS
+        # Sets the index of nodes list and apply it to each index attribute of Point class
+        # for index/element reference only, for later use in BFS and DFS functions
         for d, dot in enumerate(nodes):
             nodes[d].index = d
             print "node"+str(d+1)+":", nodes[d].label
-            #this is important, this sorts the elements of children attribute list in ascending order
+            
+            # This is important
+            # This sorts the elements of children attribute list in ascending order
             nodes[d].children.sort()
 
         print "Graph is now set!"
@@ -180,11 +190,13 @@ def input_start_handler(start_string):
     
     setStart = False
     if start_string.isdigit():
-        #for number inputs
+        # Allows number as input for starting node
+        # 1 for A, 2 for B and so on and so forth
         temp_start = int(start_string) - 1
         for element, num in enumerate(nodes):
             if temp_start == element:
-                #minus one because node label starts at 1 not zero(index)
+                
+                # Minus one because node label starts at 1 not zero(index)
                 start = temp_start
                 print "Start:", chr(start+65)
                 setStart = True
@@ -192,7 +204,7 @@ def input_start_handler(start_string):
         if setStart == False:  
             print "Warning: This number is outside of the nodes!"
     else:
-        #for letter inputs
+        # Allows letter as input for starting node
         if start_string in current_node_letters_up:
             start = ord(start_string) - 65
             setStart = True
@@ -211,7 +223,9 @@ def input_goal_handler(goal_string):
     
     setGoal = False
     if goal_string.isdigit():
-        #for number inputs
+        
+        # Allows number as input for goal node
+        # 1 for A, 2 for B and so on and so forth
         temp_goal = int(goal_string) - 1
         for element, num in enumerate(nodes):
             if temp_goal == element:
@@ -223,7 +237,7 @@ def input_goal_handler(goal_string):
         if setGoal == False:
             print "Warning: This number is outside of the nodes!"
     else:
-        #for letter inputs
+        # Allows letter as input for goal node
         if goal_string in current_node_letters_up:
             goal = ord(goal_string) - 65
             setGoal = True
@@ -242,7 +256,7 @@ def button_breadth_first_search():
     displayResult = False
     pointer_string = ""
 
-    #resets all node marking (color)
+    # Resets all nodes markings (color)
     for d, marking_obj in enumerate(nodes):
         nodes[d].is_mark = False
 
@@ -251,7 +265,9 @@ def button_breadth_first_search():
     if placeNodes == False and setNodesRelation == False and setStart == True and setGoal == True:
         print " "
         print "BFS starts here:"
-        #checks queue if defined, if it is then goto else and empty the list otherwise create new list
+        
+        # Checks queue if defined, 
+        # if it is, then go to else and empty the list; otherwise create a new list
         try:
             queue
         except:
@@ -272,7 +288,7 @@ def button_breadth_first_search():
         while queue:
             pointer = queue[0]
             queue.pop(0)
-            #print pointer
+            
             pointer.is_mark = True
             print " "
             print "Pointer:", pointer.label
@@ -329,7 +345,7 @@ def button_depth_first_search():
     displayResult = False
     pointer_string = ""
 
-#resets all node marking (color)
+# Resets all nodes markings (color)
     for d, marking_obj in enumerate(nodes):
         nodes[d].is_mark = False
 
@@ -338,7 +354,9 @@ def button_depth_first_search():
     if placeNodes == False and setNodesRelation == False and setStart == True and setGoal == True:
         print " "
         print "DFS starts here:"
-        #checks queue if defined, if it is then goto else and empty the list otherwise create new list
+        
+        # Checks queue if defined, 
+        # if it is, then go to else and empty the list; otherwise create new list
         try:
             queue
         except:
@@ -432,7 +450,7 @@ def draw_handler(canvas):
     global result_string, queue_string, pointer_string
     global placeNodes, setNodesRelation, setStart, setGoal, pos1
     
-    #Nodes drawing
+    # Draws nodes
     if draw_mark_relations == True and setNodesRelation == True:
         canvas.draw_circle(nodes[indx_mark_color].pos, 15, 3, "Yellow", "Black")
 
@@ -441,26 +459,27 @@ def draw_handler(canvas):
             nodes[i].draw(canvas)
             canvas.draw_text(nodes[i].label, (nodes[i].pos[0]-30, nodes[i].pos[1]), 20, NODE_LABEL_COLOR)
 
-    #Edges drawing
+    # Draws edges
     if draw_relations == True:
         for n, point in enumerate(nodes):
             if nodes[n].children: 
                 for child in nodes[n].children:
                     canvas.draw_line(nodes[n].pos, nodes[child].pos, EDGE_SIZE, EDGE_COLOR)
 
-    #display results
+    # Display results
     if displayResult == True:
         canvas.draw_text(pointer_string, (30, 345), 20, NODE_LABEL_COLOR)
-        canvas.draw_text(result_string, (30, 365), 20, NODE_LABEL_COLOR)
-        canvas.draw_text(queue_string, (30, 385), 20, NODE_LABEL_COLOR)
+        canvas.draw_text(result_string, (30, 370), 20, NODE_LABEL_COLOR)
+        canvas.draw_text(queue_string, (30, 390), 20, NODE_LABEL_COLOR)
 
 
-
+# Creates the frame window
 frame = simplegui.create_frame("Breadth First Search",WIDTH,HEIGHT)
 
 frame.set_mouseclick_handler(mouseclick)
 frame.set_draw_handler(draw_handler)
 
+# Button, input and label controls for the frame window
 button1 = frame.add_button('Lock in the nodes', button_lock_nodes)
 label1 = frame.add_label(' ')
 
@@ -480,5 +499,5 @@ button4 = frame.add_button('Find BFS', button_breadth_first_search)
 button5 = frame.add_button('Find DFS', button_depth_first_search)
 
 
-
+# Program starts here
 frame.start()
