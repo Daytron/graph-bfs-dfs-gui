@@ -468,13 +468,13 @@ def draw_handler(canvas):
 
     # Display results
     if displayResult == True:
-        canvas.draw_text(pointer_string, (30, 345), 20, NODE_LABEL_COLOR)
-        canvas.draw_text(result_string, (30, 370), 20, NODE_LABEL_COLOR)
-        canvas.draw_text(queue_string, (30, 390), 20, NODE_LABEL_COLOR)
+        canvas.draw_text(pointer_string, (30, 345), 15, NODE_LABEL_COLOR)
+        canvas.draw_text(result_string, (30, 370), 15, NODE_LABEL_COLOR)
+        canvas.draw_text(queue_string, (30, 395), 15, NODE_LABEL_COLOR)
 
 
 # Creates the frame window
-frame = simplegui.create_frame("Breadth First Search",WIDTH,HEIGHT)
+frame = simplegui.create_frame("Graph Node Search with BFS and DFS",WIDTH,HEIGHT)
 
 frame.set_mouseclick_handler(mouseclick)
 frame.set_draw_handler(draw_handler)
